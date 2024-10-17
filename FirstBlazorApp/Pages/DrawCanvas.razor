@@ -2,15 +2,28 @@
 
 <h3>Draw with Mouse</h3>
 
-<canvas id="drawCanvas" width="800" height="600"
+<div>
+    <label for="brushSize">Brush Size: </label>
+    <input type="range" id="brushSize" min="1" max="20" value="@brushWidth" @oninput="OnBrushSizeChanged" />
+    <span>@brushWidth px</span>
+</div>
+
+<canvas id="drawCanvas" width="400" height="400"
         style="border:1px solid black;"
         @onmousedown="BeginDrawing"
         @onmouseup="EndDrawing"
         @onmousemove="DrawAsync">
 </canvas>
 
+<div>
+    <button @onclick="CalculateUsedPercentage">Calculate Used Percentage</button>
+    <p>Canvas used: @usedPercentage%</p>
+</div>
+
 @code {
     private bool _isDrawing = false;
+    private int brushWidth = 2;
+    private double usedPercentage = 0;
 
     private async Task BeginDrawing(MouseEventArgs e)
     {
@@ -30,6 +43,20 @@
         {
             await Js.InvokeVoidAsync("draw", e.ClientX, e.ClientY);
         }
+    }
+
+    private async Task OnBrushSizeChanged(ChangeEventArgs e)
+    {
+        // Haal de waarde op van de slider en pas de brushWidth aan
+        brushWidth = int.Parse(e.Value.ToString());
+        // Stuur de nieuwe brush breedte naar de JS-functie
+        await Js.InvokeVoidAsync("setBrushWidth", brushWidth);
+    }
+
+    private async Task CalculateUsedPercentage()
+    {
+        // Vraag de JS-functie om het percentage berekende pixels te geven
+        usedPercentage = await Js.InvokeAsync<double>("calculateUsedPercentage");
     }
 
     [Inject]

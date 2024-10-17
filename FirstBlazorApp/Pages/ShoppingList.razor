@@ -11,7 +11,7 @@
         <li>@grocery.Name -- @grocery.Price</li>
     }
 </ul>
-<h1>Total (@groceries.Sum(g => g.Price))</h1>
+<h1>Total: @groceries.Sum(g => g.Price)</h1>
 
 @code {
     private string groceryName;
@@ -23,7 +23,8 @@
     {
         if(!string.IsNullOrWhiteSpace(groceryName) && groceryPrice > 0)
         {
-            groceries.Add(new Grocery
+            groceries.Add(
+                new Grocery
                 {
                     Name = groceryName,
                     Price = groceryPrice
