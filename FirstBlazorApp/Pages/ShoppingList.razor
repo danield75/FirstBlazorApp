@@ -12,9 +12,10 @@
         <li>@grocery.Name -- @grocery.Price</li>
     }
 </ul>
-<h1>Total: @groceries.Sum(g => g.Price)</h1>
+<h1>Total: @sum</h1>
 
 @code {
+    private float sum = 0;
     private string title = "Our Groceries";
     private string groceryName = "";
     private float groceryPrice;
@@ -31,6 +32,7 @@
                     Name = groceryName,
                     Price = groceryPrice
                 });
+            sum += groceryPrice;
             groceryName = string.Empty;
             groceryPrice = 0;
         }
