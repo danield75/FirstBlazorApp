@@ -8,6 +8,10 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
+<h4>Enter city</h4>
+<input type="text" @bind="@City"/>
+<button @onclick="GetWeatherForecast">Search</button>
+
 @if (forecast == null)
 {
     <p><em>Loading...</em></p>
@@ -53,13 +57,19 @@ else
     private WeatherForecast? forecast;
     private string? _urlBase;
     private string? _urlPost;
+    private string City = "Hasselt";
 
     protected override async Task OnInitializedAsync()
+    {
+        await GetWeatherForecast();
+    }
+
+    private async Task GetWeatherForecast()
     {
         _urlBase = Configuration.GetSection("WEATHER_API").GetValue<string>("URL_BASE");
         _urlPost = Configuration.GetSection("WEATHER_API").GetValue<string>("URL_POST");
 
-        forecast = await Http.GetFromJsonAsync<WeatherForecast>(_urlBase + "Hasselt" + _urlPost);
+        forecast = await Http.GetFromJsonAsync<WeatherForecast>(_urlBase + City + _urlPost);
     }
 
     public class WeatherForecast
